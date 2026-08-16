@@ -1,0 +1,16 @@
+{
+  "name": "Bombay Falooda",
+  "short_name": "Bombay Falooda",
+  "description": "Bombay Falooda ordering and brand website.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FDFBF7",
+  "theme_color": "#FB7185",
+  "icons": [
+    {
+      "src": "/assets/bombay-logo.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
+}
