@@ -1,8 +1,9 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Playfair_Display, Plus_Jakarta_Sans } from "next/font/google";
 import type { ReactNode } from "react";
 
 import { SiteShell } from "@/components/site-shell";
+import { PwaRegister } from "@/components/pwa-register";
 import "./globals.css";
 
 const jakarta = Plus_Jakarta_Sans({
@@ -24,17 +25,45 @@ export const metadata: Metadata = {
   description:
     "Bombay Falooda customer website for menu, outlet selection, takeaway ordering, brand story and gallery.",
   manifest: "/manifest.json",
-  icons: {
-    icon: "/assets/bombay-logo.png",
-    shortcut: "/assets/bombay-logo.png",
-    apple: "/assets/bombay-logo.png",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "Bombay Falooda",
   },
+  icons: {
+    icon: [
+      { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
+      { url: "/icon-512.png", sizes: "512x512", type: "image/png" },
+      { url: "/bombay-logo.png", sizes: "512x512", type: "image/png" },
+    ],
+    shortcut: "/bombay-logo.png",
+    apple: [
+      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+      { url: "/bombay-logo.png", sizes: "512x512", type: "image/png" },
+    ],
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#c2415d",
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" className={`${jakarta.variable} ${playfair.variable}`}>
+      <head>
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta name="theme-color" content="#c2415d" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+      </head>
       <body>
+        <PwaRegister />
         <SiteShell>{children}</SiteShell>
       </body>
     </html>
