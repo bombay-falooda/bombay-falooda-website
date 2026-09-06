@@ -3,6 +3,12 @@
 import Link from "next/link";
 
 export default function WebsiteDownloadsPage() {
+  const apiBase =
+    process.env.NEXT_PUBLIC_API_URL ||
+    (process.env.NODE_ENV === "production"
+      ? "https://bombay-falooda-backend.onrender.com/api"
+      : "http://localhost:4000/api");
+
   const apps = [
     {
       id: "pos",
@@ -14,7 +20,7 @@ export default function WebsiteDownloadsPage() {
       color: "bg-[#b82e46] text-white",
       description:
         "Dedicated desktop billing application for outlet cashiers. Direct WebSerial thermal printer support, KOT printing, and offline till resilience.",
-      downloadUrl: "http://localhost:4000/api/downloads/pos-setup.exe",
+      downloadUrl: `${apiBase}/downloads/pos-setup.exe`,
     },
     {
       id: "franchise",
@@ -26,7 +32,7 @@ export default function WebsiteDownloadsPage() {
       color: "bg-purple-600 text-white",
       description:
         "Native desktop client for Franchise Owners to manage outlet operations, item channel toggles (Zomato/Swiggy/POS), staff attendance, and revenue analytics.",
-      downloadUrl: "http://localhost:4000/api/downloads/franchise-setup.exe",
+      downloadUrl: `${apiBase}/downloads/franchise-setup.exe`,
     },
     {
       id: "superadmin",
@@ -38,9 +44,10 @@ export default function WebsiteDownloadsPage() {
       color: "bg-slate-900 text-white",
       description:
         "Desktop control center for corporate SuperAdmin executives. Provision new franchises, control global menu locking, and monitor multi-outlet metrics.",
-      downloadUrl: "http://localhost:4000/api/downloads/superadmin-setup.exe",
+      downloadUrl: `${apiBase}/downloads/superadmin-setup.exe`,
     },
   ];
+
 
   return (
     <main className="min-h-screen bg-[var(--bg-canvas)] py-10 px-4 font-sans">
