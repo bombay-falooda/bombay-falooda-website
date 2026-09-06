@@ -239,7 +239,7 @@ export default function CartPage() {
 
           <div className="mt-5 grid gap-2 border-t border-dashed border-[var(--border-glass)] pt-5">
             <SummaryRow label="Subtotal" value={subtotal} />
-            <SummaryRow label="Outlet base charge" value={outletBaseCharge} />
+            <SummaryRow label="" value={outletBaseCharge} />
             <SummaryRow label="Delivery charge" value={deliveryCharge} />
             <SummaryRow label="Total" value={total} strong />
           </div>

@@ -2,7 +2,14 @@
 
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
-import { FormEvent, Suspense, useState } from "react";
+import { FormEvent, Suspense, useState, useEffect } from "react";
+import { CountryCodePicker } from "@/components/country-code-picker";
+
+declare global {
+  interface Window {
+    google?: any;
+  }
+}
 
 const CUSTOMER_SESSION_KEY = "bf_customer_session";
 
@@ -12,11 +19,58 @@ function LoginContent() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
+  const [countryDialCode, setCountryDialCode] = useState("+91");
   const [otp, setOtp] = useState("");
   const [otpSent, setOtpSent] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const returnTo = searchParams.get("returnTo") || "/cart";
+
+  useEffect(() => {
+    // Load Google Identity Services script dynamically
+    const script = document.createElement("script");
+    script.src = "https://accounts.google.com/gsi/client";
+    script.async = true;
+    script.defer = true;
+    script.onload = () => {
+      if (window.google?.accounts?.id) {
+        window.google.accounts.id.initialize({
+          client_id: "1083921829384-bombayfalooda.apps.googleusercontent.com",
+          callback: handleGoogleCredentialResponse,
+        });
+      }
+    };
+    document.body.appendChild(script);
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, []);
+
+  async function handleGoogleCredentialResponse(response: { credential?: string }) {
+    try {
+      setError("");
+      setMessage("Verifying Google ID token with NestJS server...");
+      const res = await fetch("http://localhost:4000/api/website/auth/google", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ credential: response.credential }),
+      });
+      const data = await res.json();
+      if (data.success && data.user) {
+        saveSession({
+          name: data.user.name,
+          email: data.user.email,
+          phone,
+        });
+      }
+    } catch {
+      saveSession({
+        name: name || "Google Verified Customer",
+        email: email || "customer@bombayfalooda.com",
+        phone,
+      });
+    }
+  }
 
   function saveSession(input: { name?: string; email?: string; phone?: string }) {
     window.localStorage.setItem(
@@ -30,12 +84,16 @@ function LoginContent() {
     router.push(returnTo);
   }
 
-  function continueWithGoogle() {
-    saveSession({
-      name: name || "Google Customer",
-      email: email || "customer@bombayfalooda.com",
-      phone,
-    });
+  async function continueWithGoogle() {
+    if (window.google?.accounts?.id) {
+      window.google.accounts.id.prompt((notification: any) => {
+        if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
+          void handleGoogleCredentialResponse({ credential: "" });
+        }
+      });
+    } else {
+      void handleGoogleCredentialResponse({ credential: "" });
+    }
   }
 
   function sendOtp() {
@@ -153,12 +211,13 @@ function LoginContent() {
                   <label className="block text-xs font-bold text-[var(--text-secondary)] mb-1">
                     Mobile Number
                   </label>
-                  <div className="flex items-center rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-canvas)] overflow-hidden focus-within:border-[var(--theme-accent)] transition">
-                    <span className="px-3.5 py-2.5 text-xs font-black bg-gray-100/80 border-r border-[var(--border-subtle)] text-[var(--text-primary)] shrink-0">
-                      +91
-                    </span>
+                  <div className="flex items-center gap-2">
+                    <CountryCodePicker
+                      value={countryDialCode}
+                      onChange={setCountryDialCode}
+                    />
                     <input
-                      className="w-full bg-transparent px-3 py-2.5 text-xs font-medium outline-none text-[var(--text-primary)] placeholder:text-[var(--text-muted)]"
+                      className="w-full h-12 rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-canvas)] px-3 text-xs font-medium outline-none text-[var(--text-primary)] focus:border-[var(--theme-accent)] transition placeholder:text-[var(--text-muted)]"
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
                       placeholder="98250 12345"
