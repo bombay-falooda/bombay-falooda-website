@@ -12,6 +12,8 @@ declare global {
 }
 
 const CUSTOMER_SESSION_KEY = "bf_customer_session";
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || "https://api.bombayfalooda.com/api";
+const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || "1083921829384-bombayfalooda.apps.googleusercontent.com";
 
 function LoginContent() {
   const router = useRouter();
@@ -35,7 +37,7 @@ function LoginContent() {
     script.onload = () => {
       if (window.google?.accounts?.id) {
         window.google.accounts.id.initialize({
-          client_id: "1083921829384-bombayfalooda.apps.googleusercontent.com",
+          client_id: GOOGLE_CLIENT_ID,
           callback: handleGoogleCredentialResponse,
         });
       }
@@ -49,8 +51,8 @@ function LoginContent() {
   async function handleGoogleCredentialResponse(response: { credential?: string }) {
     try {
       setError("");
-      setMessage("Verifying Google ID token with NestJS server...");
-      const res = await fetch("http://localhost:4000/api/website/auth/google", {
+      setMessage("Verifying Google account...");
+      const res = await fetch(`${API_BASE}/website/auth/google`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ credential: response.credential }),
