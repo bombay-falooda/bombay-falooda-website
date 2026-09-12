@@ -252,7 +252,7 @@ export default function CartPage() {
             <div className="cart-page-line" key={line.localId}>
               <Image
                 className="cart-page-img"
-                src={line.imageUrl || "/assets/falooda-product.png"}
+                src={line.imageUrl || "/assets/image-not-uploaded.svg"}
                 alt={line.name}
                 width={96}
                 height={96}

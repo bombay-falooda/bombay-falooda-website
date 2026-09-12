@@ -1,0 +1,8 @@
+<svg width="400" height="300" viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="400" height="300" rx="16" fill="#F8FAFC"/>
+  <rect x="1" y="1" width="398" height="298" rx="15" stroke="#E2E8F0" stroke-width="2" stroke-dasharray="6 6"/>
+  <circle cx="200" cy="120" r="44" fill="#F1F5F9"/>
+  <path d="M184 136L192.586 127.414C193.367 126.633 194.633 126.633 195.414 127.414L204 136M201.5 133.5L204.586 130.414C205.367 129.633 206.633 129.633 207.414 130.414L216 139M176 148H224C226.209 148 228 146.209 228 144V108C228 105.791 226.209 104 224 104H176C173.791 104 172 105.791 172 108V144C172 146.209 173.791 148 176 148ZM214 114H214.01V114.01H214V114Z" stroke="#94A3B8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="200" y="190" text-anchor="middle" fill="#64748B" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="700" letter-spacing="0.05em">IMAGE NOT UPLOADED</text>
+  <text x="200" y="210" text-anchor="middle" fill="#94A3B8" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="500">Freshly Prepared at Outlet</text>
+</svg>

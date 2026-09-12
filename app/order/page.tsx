@@ -258,7 +258,7 @@ export default function OrderPage() {
                 <div className="flex h-48 w-full items-center justify-center overflow-hidden rounded-2xl bg-[var(--theme-soft)] p-3 mb-4 border border-[var(--border-subtle)] relative">
                   <Image
                     className="h-full w-full object-contain transition-transform duration-300 hover:scale-105"
-                    src={item.imageUrl || "/assets/falooda-product.png"}
+                    src={item.imageUrl || "/assets/image-not-uploaded.svg"}
                     alt={item.name}
                     width={360}
                     height={240}
