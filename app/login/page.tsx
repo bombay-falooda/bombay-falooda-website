@@ -13,7 +13,7 @@ declare global {
 
 const CUSTOMER_SESSION_KEY = "bf_customer_session";
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "https://api.bombayfalooda.com/api";
-const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || "1083921829384-bombayfalooda.apps.googleusercontent.com";
+const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || "594662082129-hoq7tdd4hpjl50kn12sjnl5bqvg27e26.apps.googleusercontent.com";
 
 function LoginContent() {
   const router = useRouter();
