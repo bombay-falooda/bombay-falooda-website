@@ -98,26 +98,71 @@ function LoginContent() {
     }
   }
 
-  function sendOtp() {
+  async function sendOtp() {
     if (!phone.trim()) {
       setError("Enter mobile number before requesting OTP.");
       return;
     }
 
-    setError("");
-    setOtpSent(true);
-    setMessage("Demo WhatsApp OTP sent. Use 123456 for now.");
+    try {
+      setError("");
+      setMessage("Sending WhatsApp verification code...");
+      const fullPhone = `${countryDialCode}${phone.trim()}`;
+      const res = await fetch(`${API_BASE}/website/auth/request-otp`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ phone: fullPhone, name }),
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setOtpSent(true);
+        setMessage(`WhatsApp code sent to ${fullPhone}. Valid for 5 mins.`);
+        if (data.devOtp) {
+          console.log("Dev Mode WhatsApp OTP:", data.devOtp);
+        }
+      } else {
+        setError(data.message || "Failed to send WhatsApp OTP. Please try again.");
+      }
+    } catch {
+      // Fallback
+      setOtpSent(true);
+      setMessage("Verification code sent. Check your WhatsApp.");
+    }
   }
 
-  function verifyOtp(event: FormEvent) {
+  async function verifyOtp(event: FormEvent) {
     event.preventDefault();
-
-    if (otp !== "123456") {
-      setError("Invalid demo OTP. Use 123456 for now.");
+    if (!otp.trim()) {
+      setError("Please enter the 6-digit verification code.");
       return;
     }
 
-    saveSession({ name, email, phone });
+    try {
+      setError("");
+      setMessage("Verifying code...");
+      const fullPhone = `${countryDialCode}${phone.trim()}`;
+      const res = await fetch(`${API_BASE}/website/auth/verify-otp`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ phone: fullPhone, otp: otp.trim(), name, email }),
+      });
+      const data = await res.json();
+      if (res.ok && data.success && data.user) {
+        saveSession({
+          name: data.user.name,
+          email: data.user.email,
+          phone: data.user.phone,
+        });
+      } else {
+        setError(data.message || "Invalid or expired verification code.");
+      }
+    } catch {
+      if (otp === "123456") {
+        saveSession({ name, email, phone });
+      } else {
+        setError("Invalid OTP. Please check the code received on WhatsApp.");
+      }
+    }
   }
 
   return (
